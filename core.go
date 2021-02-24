@@ -18,7 +18,11 @@ import (
 )
 
 var (
+<<<<<<< HEAD
 	version  = "4.31.0"
+=======
+	version  = "4.28.0"
+>>>>>>> parent of 20926be8 (Merge pull request #2740 from v2fly/master)
 	build    = "Custom"
 	codename = "V2Fly, a community-driven edition of V2Ray."
 	intro    = "A unified platform for anti-censorship."

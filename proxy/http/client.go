@@ -210,10 +210,9 @@ func setUpHTTPTunnel(ctx context.Context, dest net.Destination, target string, u
 	}
 
 	cachedH2Mutex.Lock()
-	cachedConn, cachedConnFound := cachedH2Conns[dest]
-	cachedH2Mutex.Unlock()
+	defer cachedH2Mutex.Unlock()
 
-	if cachedConnFound {
+	if cachedConn, found := cachedH2Conns[dest]; found {
 		rc, cc := cachedConn.rawConn, cachedConn.h2Conn
 		if cc.CanTakeNewRequest() {
 			proxyConn, err := connectHTTP2(rc, cc)
@@ -261,7 +260,6 @@ func setUpHTTPTunnel(ctx context.Context, dest net.Destination, target string, u
 			return nil, err
 		}
 
-		cachedH2Mutex.Lock()
 		if cachedH2Conns == nil {
 			cachedH2Conns = make(map[net.Destination]h2Conn)
 		}
@@ -270,7 +268,6 @@ func setUpHTTPTunnel(ctx context.Context, dest net.Destination, target string, u
 			rawConn: rawConn,
 			h2Conn:  h2clientConn,
 		}
-		cachedH2Mutex.Unlock()
 
 		return proxyConn, err
 	default:

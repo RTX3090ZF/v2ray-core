@@ -12,6 +12,10 @@ import (
 	"hash"
 	"hash/fnv"
 	"io"
+<<<<<<< HEAD
+=======
+	vmessaead "v2ray.com/core/proxy/vmess/aead"
+>>>>>>> parent of 20926be8 (Merge pull request #2740 from v2fly/master)
 
 	"golang.org/x/crypto/chacha20poly1305"
 
@@ -49,6 +53,7 @@ type ClientSession struct {
 // NewClientSession creates a new ClientSession.
 func NewClientSession(isAEAD bool, idHash protocol.IDHash, ctx context.Context) *ClientSession {
 
+<<<<<<< HEAD
 	session := &ClientSession{
 		isAEAD: isAEAD,
 		idHash: idHash,
@@ -56,6 +61,16 @@ func NewClientSession(isAEAD bool, idHash protocol.IDHash, ctx context.Context) 
 
 	randomBytes := make([]byte, 33) // 16 + 16 + 1
 	common.Must2(rand.Read(randomBytes))
+=======
+	session.isAEADRequest = false
+
+	if ctxValueAlterID := ctx.Value(vmess.AlterID); ctxValueAlterID != nil {
+		if ctxValueAlterID == 0 {
+			session.isAEADRequest = true
+		}
+	}
+
+>>>>>>> parent of 20926be8 (Merge pull request #2740 from v2fly/master)
 	copy(session.requestBodyKey[:], randomBytes[:16])
 	copy(session.requestBodyIV[:], randomBytes[16:32])
 	session.responseHeader = randomBytes[32]
@@ -66,7 +81,7 @@ func NewClientSession(isAEAD bool, idHash protocol.IDHash, ctx context.Context) 
 	} else {
 		BodyKey := sha256.Sum256(session.requestBodyKey[:])
 		copy(session.responseBodyKey[:], BodyKey[:16])
-		BodyIV := sha256.Sum256(session.requestBodyIV[:])
+		BodyIV := sha256.Sum256(session.requestBodyKey[:])
 		copy(session.responseBodyIV[:], BodyIV[:16])
 	}
 

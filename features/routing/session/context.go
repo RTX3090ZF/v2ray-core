@@ -95,14 +95,14 @@ func (ctx *Context) GetProtocol() string {
 
 // GetUser implements routing.Context.
 func (ctx *Context) GetUser() string {
-	if ctx.Inbound == nil || ctx.Inbound.User == nil {
+	if ctx.Inbound == nil {
 		return ""
 	}
 	return ctx.Inbound.User.Email
 }
 
 // GetAttributes implements routing.Context.
-func (ctx *Context) GetAttributes() map[string]string {
+func (ctx *Context) GetAttributes() map[string]interface{} {
 	if ctx.Content == nil {
 		return nil
 	}
